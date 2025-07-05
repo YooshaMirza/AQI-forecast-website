@@ -1,0 +1,30 @@
+{
+  "training_events": [
+    {
+      "timestamp": "2025-07-05T21:56:57.045900",
+      "unix_time": 1751732817,
+      "cities_trained": [
+        "meerut",
+        "bikaner"
+      ],
+      "metrics": {
+        "mse": 7226.0142,
+        "mae": 85.006,
+        "training_samples": 1
+      }
+    },
+    {
+      "timestamp": "2025-07-05T21:57:05.139129",
+      "unix_time": 1751732825,
+      "cities_trained": [
+        "meerut",
+        "bikaner"
+      ],
+      "metrics": {
+        "mse": 7152.7653,
+        "mae": 84.574,
+        "training_samples": 1
+      }
+    }
+  ]
+}
