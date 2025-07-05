@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_f1b2f0d595279040ee85266721efd063 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+        
+</head>
+<body>
+    
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        .leaflet-container {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        .leaflet-popup-content {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        .leaflet-control {
+            font-family: 'Poppins', sans-serif !important;
+        }
+        .leaflet-interactive {
+            transition: all 0.3s ease;
+        }
+        .leaflet-interactive:hover {
+            stroke-width: 4px !important;
+            stroke-opacity: 1 !important;
+            fill-opacity: 0.9 !important;
+        }
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .leaflet-popup-tip {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+    
+    
+        <div style="position: fixed; 
+                    top: 10px; 
+                    left: 50px; 
+                    width: 320px; 
+                    z-index: 9999; 
+                    font-size: 16px; 
+                    font-family: 'Poppins', Arial, sans-serif;
+                    background-color: rgba(255, 255, 255, 0.95);
+                    color: #333;
+                    text-align: center;
+                    padding: 12px;
+                    border-radius: 8px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+                    border-left: 4px solid #4CAF50;">
+            <div style="font-weight: 600; font-size: 18px; margin-bottom: 5px;">Air Quality Map for Bikaner</div>
+            <div style="font-size: 14px; opacity: 0.8;">Data updated: 2025-07-05 21:07</div>
+        </div>
+    
+    
+        <div style="position: fixed; 
+                    bottom: 30px; 
+                    right: 30px; 
+                    z-index: 9999; 
+                    background-color: rgba(255, 255, 255, 0.95);
+                    padding: 15px;
+                    border-radius: 8px;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+                    font-family: 'Poppins', Arial, sans-serif;
+                    font-size: 12px;
+                    max-width: 220px;
+                    border-top: 4px solid #2196F3;">
+            <p style="text-align: center; margin: 0 0 8px 0; font-weight: 600; font-size: 14px; color: #333;">AQI Categories</p>
+            <div style="margin-bottom: 6px; display: flex; align-items: center;">
+                <span style="background-color: #4CAF50; display: inline-block; width: 15px; height: 15px; margin-right: 8px; border-radius: 3px;"></span>
+                <span>Good (0-50)</span>
+            </div>
+            <div style="margin-bottom: 6px; display: flex; align-items: center;">
+                <span style="background-color: #8BC34A; display: inline-block; width: 15px; height: 15px; margin-right: 8px; border-radius: 3px;"></span>
+                <span>Satisfactory (51-100)</span>
+            </div>
+            <div style="margin-bottom: 6px; display: flex; align-items: center;">
+                <span style="background-color: #FFC107; display: inline-block; width: 15px; height: 15px; margin-right: 8px; border-radius: 3px;"></span>
+                <span>Moderate (101-200)</span>
+            </div>
+            <div style="margin-bottom: 6px; display: flex; align-items: center;">
+                <span style="background-color: #FF9800; display: inline-block; width: 15px; height: 15px; margin-right: 8px; border-radius: 3px;"></span>
+                <span>Poor (201-300)</span>
+            </div>
+            <div style="margin-bottom: 6px; display: flex; align-items: center;">
+                <span style="background-color: #F44336; display: inline-block; width: 15px; height: 15px; margin-right: 8px; border-radius: 3px;"></span>
+                <span>Very Poor (301-400)</span>
+            </div>
+            <div style="margin-bottom: 0; display: flex; align-items: center;">
+                <span style="background-color: #9C27B0; display: inline-block; width: 15px; height: 15px; margin-right: 8px; border-radius: 3px;"></span>
+                <span>Severe (400+)</span>
+            </div>
+        </div>
+    
+    
+            <div class="folium-map" id="map_f1b2f0d595279040ee85266721efd063" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_f1b2f0d595279040ee85266721efd063 = L.map(
+                "map_f1b2f0d595279040ee85266721efd063",
+                {
+                    center: [28.0159286, 73.3171367],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 10,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_b45170ef56ef085830643a953ac8a63f = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca target=\"_blank\" href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca target=\"_blank\" href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var tile_layer_718ad6e0981851b3014a6a678e121747 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca target=\"_blank\" href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca target=\"_blank\" href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var tile_layer_4bf899062dcdcce04ce9556c5ba9b5cd = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca target=\"_blank\" href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca target=\"_blank\" href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var tile_layer_3c7751fb87f320be573d6642b082c594 = L.tileLayer(
+                "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {"attribution": "Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://www.openstreetmap.org/copyright\"\u003eODbL\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var tile_layer_0ed90707fa69c851d1769fc43ddfc943 = L.tileLayer(
+                "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
+                {"attribution": "Map tiles by \u003ca target=\"_blank\" href=\"http://stamen.com\"\u003eStamen Design\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://creativecommons.org/licenses/by/3.0\"\u003eCC BY 3.0\u003c/a\u003e. Data by \u0026copy; \u003ca target=\"_blank\" href=\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e, under \u003ca target=\"_blank\" href=\"http://creativecommons.org/licenses/by-sa/3.0\"\u003eCC BY SA\u003c/a\u003e.", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var circle_marker_a26b91dc1697c89b97bcde669e1764cb = L.circleMarker(
+                [28.0159286, 73.3171367],
+                {"bubblingMouseEvents": true, "color": "#000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8BC34A", "fillOpacity": 0.85, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 20, "stroke": true, "weight": 2}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+        var popup_17780bdf4a345934bc1a2f4cbe9e0329 = L.popup({"maxWidth": 400});
+
+        
+            
+                var html_617f8511be8368dbc427415c968d5a9d = $(`<div id="html_617f8511be8368dbc427415c968d5a9d" style="width: 100.0%; height: 100.0%;">         <div style="font-family: 'Poppins', Arial, sans-serif; padding: 16px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">             <h3 style="margin-bottom: 12px; color: #333; font-weight: 600; border-bottom: 2px solid #8BC34A; padding-bottom: 8px;">Bikaner</h3>             <div style="background: linear-gradient(45deg, #8BC34A, #8BC34Add); color: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; text-align: center;">                 <span style="font-size: 32px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.2);">90.00000000000006</span>                 <span style="display: block; font-size: 14px; margin-top: 5px;">AQI Value</span>             </div>             <div style="background-color: #f9f9f9; padding: 10px; border-radius: 8px; margin-top: 10px;">                 <p style="margin: 5px 0;"><b>Category:</b> <span style="font-weight: 600; color: #8BC34A; padding: 3px 8px; background-color: #8BC34A22; border-radius: 4px;">🟡 Satisfactory – Minor discomfort to sensitive people</span></p>                 <p style="margin: 8px 0; font-size: 12px; color: #666;">Updated: 2025-07-05 21:07</p>             </div>         </div>         </div>`)[0];
+                popup_17780bdf4a345934bc1a2f4cbe9e0329.setContent(html_617f8511be8368dbc427415c968d5a9d);
+            
+        
+
+        circle_marker_a26b91dc1697c89b97bcde669e1764cb.bindPopup(popup_17780bdf4a345934bc1a2f4cbe9e0329)
+        ;
+
+        
+    
+    
+            circle_marker_a26b91dc1697c89b97bcde669e1764cb.bindTooltip(
+                `<div>
+                     <b>Bikaner</b>: AQI 90.00000000000006 • 🟡 Satisfactory – Minor discomfort to sensitive people
+                 </div>`,
+                {"sticky": true}
+            );
+        
+    
+            var circle_marker_f0a050e8b0647df839696c4254a8ba0a = L.circleMarker(
+                [28.0159286, 73.3171367],
+                {"bubblingMouseEvents": true, "color": "#8BC34A", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8BC34A", "fillOpacity": 0.03333333333333333, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 50.0, "stroke": true, "weight": 2}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var circle_marker_6e05b57cd3dae8401583563aa3d8a144 = L.circleMarker(
+                [28.0159286, 73.3171367],
+                {"bubblingMouseEvents": true, "color": "#8BC34A", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8BC34A", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 40.0, "stroke": true, "weight": 2}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var circle_marker_f053f0e2f02e39e0f9174c20841acc8c = L.circleMarker(
+                [28.0159286, 73.3171367],
+                {"bubblingMouseEvents": true, "color": "#8BC34A", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8BC34A", "fillOpacity": 0.1, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 0.3, "radius": 30.0, "stroke": true, "weight": 2}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var circle_marker_185819b596b17a912f5d9c8c12b3f6a2 = L.circleMarker(
+                [28.0159286, 73.3171367],
+                {"bubblingMouseEvents": true, "color": "#8BC34A", "dashArray": "5, 10", "dashOffset": null, "fill": false, "fillColor": "#8BC34A", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 40, "stroke": true, "weight": 2}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var marker_430cf840d82e88021224eadcecb7c98e = L.marker(
+                [28.0159286, 73.3171367],
+                {}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+        
+    
+            var div_icon_a15faf2cf4b1579e6fbc20f7ad905914 = L.divIcon({"className": "empty", "html": "\n                        \u003cdiv style=\"\n                            width: 10px;\n                            height: 10px;\n                            background-color: #8BC34A;\n                            border: 2px solid white;\n                            border-radius: 50%;\n                            box-shadow: 0 0 5px #000;\n                        \"\u003e\u003c/div\u003e\n                    ", "iconAnchor": [10, 10], "iconSize": [20, 20]});
+            marker_430cf840d82e88021224eadcecb7c98e.setIcon(div_icon_a15faf2cf4b1579e6fbc20f7ad905914);
+        
+    
+            var layer_control_47b0e0f9d7a57191d59cfe09c3ae33fd = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_b45170ef56ef085830643a953ac8a63f,
+                    "Light Theme" : tile_layer_718ad6e0981851b3014a6a678e121747,
+                    "Dark Theme" : tile_layer_4bf899062dcdcce04ce9556c5ba9b5cd,
+                    "Standard Map" : tile_layer_3c7751fb87f320be573d6642b082c594,
+                    "Terrain" : tile_layer_0ed90707fa69c851d1769fc43ddfc943,
+                },
+                overlays :  {
+                },
+            };
+            L.control.layers(
+                layer_control_47b0e0f9d7a57191d59cfe09c3ae33fd.base_layers,
+                layer_control_47b0e0f9d7a57191d59cfe09c3ae33fd.overlays,
+                {"autoZIndex": true, "collapsed": true, "position": "topright"}
+            ).addTo(map_f1b2f0d595279040ee85266721efd063);
+            tile_layer_718ad6e0981851b3014a6a678e121747.remove();
+            tile_layer_4bf899062dcdcce04ce9556c5ba9b5cd.remove();
+            tile_layer_3c7751fb87f320be573d6642b082c594.remove();
+            tile_layer_0ed90707fa69c851d1769fc43ddfc943.remove();
+        
+</script>
+</html>

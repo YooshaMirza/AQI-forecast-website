@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AQI Forecast App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4CAF50;
+      --primary-dark: #388E3C;
+      --secondary-color: #2196F3;
+      --accent-color: #FF9800;
+      --danger-color: #F44336;
+      --dark-color: #333;
+      --light-color: #f9f9f9;
+      --border-radius: 12px;
+      --box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+      --gradient: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #c2e59c 0%, #64b3f4 100%);
+      color: var(--dark-color);
+      line-height: 1.6;
+      min-height: 100vh;
+      padding: 2rem 0;
+      background-attachment: fixed;
+      animation: gradientBG 15s ease infinite;
+      background-size: 400% 400%;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      max-width: 1140px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .header h1 {
+      color: var(--primary-color);
+      font-weight: 600;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+    }
+
+    .header h1:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 4px;
+      width: 60px;
+      background: var(--primary-color);
+      border-radius: 2px;
+    }
+
+    .header p {
+      color: #666;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .search-form {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .search-input {
+      flex-grow: 1;
+      max-width: 500px;
+      padding: 1rem;
+      border: 2px solid #eee;
+      border-right: none;
+      border-radius: var(--border-radius) 0 0 var(--border-radius);
+      font-size: 1rem;
+      outline: none;
+      transition: var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-color);
+    }
+
+    .search-button {
+      padding: 1rem 1.5rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .search-button:hover {
+      background-color: #3d8b3d;
+    }
+
+    .result-section {
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--box-shadow);
+      border-left: 5px solid var(--primary-color);
+      transition: transform 0.3s ease;
+    }
+    
+    .result-section:hover {
+      transform: translateY(-5px);
+    }
+
+    .result-header {
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      font-size: 1.8rem;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .result-header::after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 3px;
+      bottom: -2px;
+      left: 0;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+      border-radius: 2px;
+    }
+
+    .aqi-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .aqi-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .aqi-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+
+    .aqi-card h3 {
+      color: var(--dark-color);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .aqi-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--secondary-color);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .aqi-category {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: white;
+      margin-top: 0.5rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+    
+    .category-good {
+      background-color: var(--primary-color);
+    }
+
+    .category-moderate {
+      background-color: var(--accent-color);
+    }
+
+    .category-poor {
+      background-color: var(--danger-color);
+    }
+    
+    .category-satisfactory {
+      background-color: #8BC34A;
+    }
+    
+    .category-very-poor {
+      background-color: #F44336;
+    }
+    
+    .category-severe {
+      background-color: #9C27B0;
+    }
+
+    .forecast-section {
+      margin-bottom: 2rem;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+    
+    .forecast-section h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--secondary-color);
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+    }
+    
+    .forecast-section h3 i {
+      color: var(--accent-color);
+      font-size: 1.3rem;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .forecast-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 1.5rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+    }
+
+    .forecast-table th, .forecast-table td {
+      padding: 1.2rem 1rem;
+      text-align: center;
+    }
+    
+    .forecast-table th {
+      background: linear-gradient(120deg, var(--primary-color), var(--primary-dark));
+      color: white;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+    }
+
+    .forecast-table td {
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      font-size: 1.05rem;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .forecast-table td.aqi-value-cell {
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    
+    .forecast-table td.category-cell span {
+      padding: 5px 10px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      color: white;
+      font-weight: 500;
+      display: inline-block;
+      min-width: 120px;
+    }
+
+    .forecast-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .forecast-table tr {
+      transition: all 0.3s ease;
+      animation: slideIn 0.5s ease-in-out forwards;
+      opacity: 0;
+    }
+    
+    .forecast-table tr:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+    
+    .forecast-table tr:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+    
+    .forecast-table tr:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .forecast-table tr:hover td {
+      background-color: rgba(33, 150, 243, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .heatmap-section {
+      margin-top: 2rem;
+    }
+    
+    .heatmap-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    
+    .heatmap-title i {
+      color: var(--secondary-color);
+      font-size: 1.5rem;
+    }
+    
+    .map-instruction {
+      margin-bottom: 1rem;
+      color: #666;
+      font-size: 0.9rem;
+      background-color: rgba(33, 150, 243, 0.1);
+      padding: 10px 15px;
+      border-radius: 5px;
+      border-left: 4px solid var(--secondary-color);
+    }
+    
+    .map-instruction i {
+      color: var(--secondary-color);
+      margin-right: 5px;
+    }
+    
+    .heatmap-container {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      height: 500px;
+      position: relative;
+      transition: all 0.3s ease;
+      border: 3px solid #fff;
+    }
+    
+    .heatmap-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .heatmap-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    .heatmap-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .heatmap-container:hover .heatmap-overlay {
+      opacity: 1;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+
+      .aqi-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+      }
+
+      .search-input, .search-button {
+        padding: 0.75rem;
+      }
+    }
+
+    /* AQI Category Colors */
+    .good {
+      color: #4CAF50;
+    }
+
+    .satisfactory {
+      color: #8BC34A;
+    }
+
+    .moderate {
+      color: #FFC107;
+    }
+
+    .poor {
+      color: #FF9800;
+    }
+
+    .very-poor {
+      color: #F44336;
+    }
+
+    .severe {
+      color: #9C27B0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>AQI Forecast Application</h1>
+      <p>Get accurate air quality forecasts and predictions for any city worldwide</p>
+    </div>
+
+    <form method="POST" class="search-form">
+      <input type="text" name="city" placeholder="Enter a city name" value="{{ city }}" required class="search-input">
+      <button type="submit" class="search-button"><i class="fas fa-search"></i> Get Forecast</button>
+    </form>
+
+    {% if city %}
+    <div class="result-section">
+      <h3 class="result-header"><i class="fas fa-map-marker-alt"></i> Results for {{ city }}</h3>
+      
+      {% if current_aqi or prediction %}
+      <div class="aqi-cards">
+        {% if current_aqi %}
+        <div class="aqi-card">
+          <h4><i class="fas fa-broadcast-tower"></i> Current AQI</h4>
+          <div class="aqi-value">{{ current_aqi }}</div>
+          <span class="aqi-category 
+            {% if current_aqi <= 50 %}good
+            {% elif current_aqi <= 100 %}satisfactory
+            {% elif current_aqi <= 200 %}moderate
+            {% elif current_aqi <= 300 %}poor
+            {% elif current_aqi <= 400 %}very-poor
+            {% else %}severe{% endif %}">
+            {{ category.split(' – ')[0] if category else 'Not Available' }}
+          </span>
+          <p>Real-time air quality data from WAQI API</p>
+        </div>
+        {% endif %}
+        
+        {% if prediction %}
+        <div class="aqi-card">
+          <h4><i class="fas fa-chart-line"></i> Predicted AQI</h4>
+          <div class="aqi-value">{{ prediction }}</div>
+          <span class="aqi-category 
+            {% if prediction <= 50 %}good
+            {% elif prediction <= 100 %}satisfactory
+            {% elif prediction <= 200 %}moderate
+            {% elif prediction <= 300 %}poor
+            {% elif prediction <= 400 %}very-poor
+            {% else %}severe{% endif %}">
+            {{ category.split(' – ')[0] if category else 'Not Available' }}
+          </span>
+          <p>{{ category.split(' – ')[1] if category and ' – ' in category else '' }}</p>
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if forecast_data %}
+      <div class="forecast-section">
+        <h3><i class="fas fa-calendar-alt"></i> 3-Day AQI Forecast</h3>
+        <table class="forecast-table">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Date</th>
+              <th>Predicted AQI</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for day in forecast_data %}
+            <tr>
+              <td><strong>{{ day.day }}</strong></td>
+              <td>{{ day.date }}</td>
+              <td class="aqi-value-cell">{{ day.value }}</td>
+              <td class="category-cell">
+                <span class="
+                  {% if day.value <= 50 %}category-good
+                  {% elif day.value <= 100 %}category-satisfactory
+                  {% elif day.value <= 200 %}category-moderate
+                  {% elif day.value <= 300 %}category-poor
+                  {% elif day.value <= 400 %}category-very-poor
+                  {% else %}category-severe{% endif %}">
+                  {{ day.category.split(' – ')[0] if ' – ' in day.category else day.category }}
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if heatmap_path %}
+    <div class="heatmap-section">
+      <div class="heatmap-title">
+        <i class="fas fa-map-marked-alt"></i>
+        <h3 class="result-header">AQI Heatmap for {{ city }}</h3>
+      </div>
+      <p class="map-instruction"><i class="fas fa-info-circle"></i> Interactive map showing air quality in {{ city }}. Click on the marker for detailed information.</p>
+      <div class="heatmap-container">
+        <iframe src="{{ url_for('heatmap') }}" class="heatmap-iframe"></iframe>
+        <div class="heatmap-overlay">
+          <span><i class="fas fa-search-location"></i> Explore {{ city }}'s Air Quality</span>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <div class="footer">
+      <p>© 2025 AQI Forecast App | Powered by NASA POWER and WAQI API</p>
+      <p><i class="fas fa-code"></i> with <i class="fas fa-heart" style="color: #F44336;"></i> for cleaner air</p>
+      <p style="margin-top: 10px;"><a href="/admin" style="color: #2196F3; text-decoration: none;"><i class="fas fa-user-shield"></i> Admin Panel</a></p>
+    </div>
+  </div>
+</body>
+</html>

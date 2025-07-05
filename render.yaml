@@ -1,0 +1,8 @@
+type: web
+name: aqi-forecast
+runtime: python
+buildCommand: "pip install -r requirements.txt"
+startCommand: "python app.py"
+envVars:
+  - key: FLASK_ENV
+    value: production

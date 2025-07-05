@@ -1,0 +1,103 @@
+/* Custom styles for AQI Forecast App */
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.aqi-display {
+    font-size: 3rem;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+.aqi-category {
+    padding: 8px 15px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+/* AQI Category colors */
+.aqi-good {
+    background-color: #00e400;
+    color: #333;
+}
+
+.aqi-moderate {
+    background-color: #ffff00;
+    color: #333;
+}
+
+.aqi-unhealthy-sensitive {
+    background-color: #ff7e00;
+    color: white;
+}
+
+.aqi-unhealthy {
+    background-color: #ff0000;
+    color: white;
+}
+
+.aqi-very-unhealthy {
+    background-color: #8f3f97;
+    color: white;
+}
+
+.aqi-hazardous {
+    background-color: #7e0023;
+    color: white;
+}
+
+.forecast-item {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.model-status-badge {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.status-online {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.status-offline {
+    background-color: #f8d7da;
+    color: #842029;
+}
