@@ -1,161 +1,171 @@
 # AQI Forecast Application
 
-This application provides Air Quality Index (AQI) forecasts using machine learning models. It uses a machine learning model trained on weather data from NASA's POWER API combined with real-time AQI data from the WAQI API.
+This application provides Air Quality Index (AQI) forecasts using machine learning models. It leverages weather data from NASA's POWER API and real-time AQI data from the World Air Quality Index (WAQI) API to deliver up-to-date, city-level air quality predictions. The app is designed for both public users and researchers seeking insights into air pollution trends.
 
-## Features
+**🌐 Live Demo:**  
+[https://aqi-forecast-website.onrender.com/](https://aqi-forecast-website.onrender.com/)
 
-- **City-Based Forecasting**: Get AQI predictions for any city worldwide
-- **Daily Model Retraining**: Model automatically retrains daily with new data
-- **Interactive Heatmaps**: Visual representation of air quality by region
-- **Persistent Data Storage**: Models and historical data stored on GitHub
-- **Modern UI**: Responsive design with color-coded AQI categories
-- **Static Site Generation**: Can be deployed as a static site on GitHub Pages
+---
 
-## Deployment Options
+## 🚀 Features
 
-This application can be deployed in two ways:
+- **🌍 City-Based AQI Forecasting**  
+  Get personalized AQI predictions for any city worldwide by entering its name.
 
-### 1. Full Dynamic Application (Render, Heroku, etc.)
+- **🔄 Daily Model Retraining**  
+  The ML model is automatically retrained every day with the latest data, ensuring accurate and current predictions.
 
-The complete Flask application with real-time forecasting, automatic model retraining, and admin features.
+- **🗺️ Interactive Heatmaps**  
+  Visualize regional air quality trends with dynamic, color-coded heatmaps.
 
-### 2. Static GitHub Pages Site
+- **🗃️ Persistent Data Storage**  
+  All models and historical data are securely backed up to GitHub for reliability and transparency.
 
-A pre-generated static version that can be hosted on GitHub Pages. This version:
-- Contains pre-generated forecasts for popular cities
-- Automatically updates via GitHub Actions
-- Stores all data and models directly in your GitHub repository
-- Eliminates the need for a separate data persistence pipeline
+- **💻 Modern, Responsive UI**  
+  Enjoy a sleek, user-friendly interface with clear AQI categories and mobile-friendly design.
 
-## Project Structure
+- **🛠️ Admin Tools**  
+  Built-in admin panel for managing data backups, uploads, and model retraining.
+
+---
+
+## 🏗️ Project Structure
 
 ```
 aqi_forecast_app/
 │
-├── .github/workflows/           # GitHub Actions workflows for GitHub Pages
-├── app/                         # Core application modules
-│   ├── models/                  # Trained ML models
-│   ├── historical_data/         # Historical AQI and training data
-│   ├── backup_manager.py        # Data backup/restore utilities
-│   ├── backend_utils.py         # API and utility functions
-│   ├── data_manager.py          # Historical data management
+├── .github/workflows/           # GitHub Actions CI/CD
+├── app/                         # Core backend modules
+│   ├── models/                  # Saved ML models
+│   ├── historical_data/         # Historical AQI & weather data
+│   ├── backup_manager.py        # Data backup/restore
+│   ├── backend_utils.py         # API utilities
+│   ├── data_manager.py          # Data management logic
 │   ├── fetch_and_train.py       # Model training pipeline
-│   ├── github_storage.py        # GitHub data persistence
-│   ├── init_directories.py      # Directory initialization
-│   ├── model_loader.py          # Model loading and AQI classification
-│   ├── plot_heatmap.py          # Heatmap generation
-│   └── scheduled_training.py    # Automatic daily retraining
+│   ├── github_storage.py        # GitHub persistence
+│   ├── init_directories.py      # Directory setup
+│   ├── model_loader.py          # Model interface
+│   ├── plot_heatmap.py          # Heatmap generator
+│   └── scheduled_training.py    # Scheduled retraining
 │
-├── main.py                      # Main Flask application
+├── main.py                      # Flask entrypoint
 ├── scripts/                     # Utility scripts
-│   ├── build_static_site.py     # Static site generator for GitHub Pages
-│   ├── deploy_to_github_pages.py # GitHub Pages deployment helper
-│   └── setup_github_integration.py # GitHub token and repo setup
+│   ├── build_static_site.py     # (legacy) Static site generator
+│   ├── deploy_to_github_pages.py # (legacy) GitHub Pages deployer
+│   └── setup_github_integration.py # GitHub repo setup
 │
-├── static/                      # Static assets and generated maps
-├── templates/                   # HTML templates
+├── static/                      # Static assets (maps, CSS, JS)
+├── templates/                   # HTML UI templates
 │   ├── admin.html               # Admin panel
-│   └── index_enhanced.html      # Main application UI
+│   └── index_enhanced.html      # Main UI
 │
-├── Procfile                     # Deployment configuration for Render/Heroku
+├── Procfile                     # Render/Heroku deployment config
 ├── README.md                    # This file
-├── render.yaml                  # Render configuration
+├── render.yaml                  # Render deployment config
 ├── requirements.txt             # Python dependencies
-└── wsgi.py                      # WSGI entry point
+└── wsgi.py                      # WSGI entrypoint
 ```
 
-## Setup for GitHub Pages Deployment
+---
 
-To leverage GitHub Pages for hosting your app and storing data:
+## ⚡ Quickstart: Local Setup & Deployment
 
-1. **Configure GitHub Integration**:
-   ```bash
-   python scripts/setup_github_integration.py
-   ```
+### 1. Clone the Repository
 
-2. **Build and Test Static Site**:
-   ```bash
-   python scripts/build_static_site.py
-   ```
+```bash
+git clone https://github.com/YooshaMirza/AQI-forecast-website.git
+cd AQI-forecast-website
+```
 
-3. **Deploy to GitHub Pages**:
-   ```bash
-   python scripts/deploy_to_github_pages.py
-   ```
+### 2. Install Dependencies
 
-4. **Setup GitHub Actions** (Optional):
-   - Ensure your repository has the following secrets:
-     - `WAQI_API_KEY`: Your World Air Quality Index API key
+```bash
+pip install -r requirements.txt
+```
 
-   The GitHub Actions workflow will:
-   - Run daily to retrain the model with fresh data
-   - Update the static site with new forecasts
-   - Commit all data and models back to your repository
-   - Deploy the updated static site to GitHub Pages
+### 3. Configure Environment Variables
 
-## Setup for Full Dynamic Application
+Create a `.env` file (or set in your environment):
 
-1. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```
+WAQI_API_KEY=your_waqi_api_key
+GITHUB_TOKEN=your_github_pat   # Optional, for data backup
+GITHUB_REPO=username/repo-name # Optional, for data backup
+```
 
-2. **Set Environment Variables**:
-   - `WAQI_API_KEY`: Your World Air Quality Index API key
-   - `GITHUB_TOKEN`: Personal Access Token for GitHub storage (optional)
-   - `GITHUB_REPO`: Repository for data storage (optional, format: username/repo-name)
+### 4. Initialize Application Directories
 
-3. **Initialize Application**:
-   ```bash
-   python -c "from app.init_directories import init_all; init_all()"
-   ```
+```bash
+python -c "from app.init_directories import init_all; init_all()"
+```
 
-4. **Run the Application**:
-   ```bash
-   python main.py
-   ```
+### 5. Run the Application
 
-## Data Persistence Strategy
+```bash
+python main.py
+```
 
-This application uses a multi-layered approach to ensure data persistence:
+Visit [http://localhost:5000](http://localhost:5000) in your browser.
 
-1. **Local Storage**: All models and historical data are saved locally
-2. **GitHub Repository**: Data is automatically backed up to GitHub after each training session
-3. **Manual Backups**: Admin panel allows downloading/uploading backup files
-4. **Static Site**: Pre-generated forecasts are included in the static GitHub Pages site
+---
 
-This ensures that even if deployed on platforms with ephemeral storage (like Render's free tier), your data will persist.
+## ☁️ Deployment
 
-## How It Works
+- **Production:** The app is live at [https://aqi-forecast-website.onrender.com/](https://aqi-forecast-website.onrender.com/)
+- **Other Platforms:** You can deploy on Render, Heroku, or any WSGI-compatible host. See `render.yaml` and `Procfile` for starter configs.
 
-### Dynamic Application
-1. **City Selection**: User enters a city name
-2. **Geocoding**: App converts city name to latitude/longitude
-3. **Weather Data**: NASA POWER API provides weather metrics for the location
-4. **Real-time AQI**: Current AQI is fetched from WAQI API
-5. **Prediction**: ML model predicts AQI based on weather parameters
-6. **Training**: Model retrains daily using historical data
+---
 
-### Static GitHub Pages Site
-1. **Pre-generated Data**: Static site includes pre-generated data for popular cities
-2. **GitHub Actions**: Automatically updates data daily via GitHub Actions
-3. **GitHub Storage**: All data and models are stored in your GitHub repository
-4. **No Server Required**: Pure static HTML/JS/CSS that runs entirely in the browser
+## 🔄 Data Persistence & Reliability
 
-## AQI Categories
+- **Local Storage:** Models and historical data are saved locally on the server.
+- **GitHub Backup:** Data is automatically synchronized to your GitHub repository for persistence, even on ephemeral hosts like Render.
+- **Manual Backups:** Use the admin panel to create or restore backups.
 
-- **Good** (0-50): Air quality is satisfactory
-- **Satisfactory** (51-100): Minor discomfort to sensitive people
-- **Moderate** (101-200): May cause breathing discomfort to people with lung disease
-- **Poor** (201-300): May cause discomfort to most people
-- **Very Poor** (301-400): May cause respiratory issues
-- **Severe** (401+): Affects healthy people and seriously impacts those with existing diseases
+---
 
-## API Credits
+## 🧠 How It Works
+
+1. **User Input:** Enter a city name to get a forecast.
+2. **Geocoding:** The app translates city names to geo-coordinates.
+3. **Weather Data Retrieval:** NASA POWER API provides weather metrics for the location.
+4. **AQI Data:** Current AQI is fetched from WAQI.
+5. **ML Prediction:** The trained model predicts AQI based on combined weather and AQI data.
+6. **Model Training:** The model retrains daily for improved accuracy.
+
+---
+
+## 🎨 AQI Categories & Color Codes
+
+| Category      | AQI Range | Meaning                                              | Color     |
+|---------------|-----------|------------------------------------------------------|-----------|
+| Good          | 0-50      | Air quality is satisfactory                          | 🟢 Green  |
+| Satisfactory  | 51-100    | Minor discomfort to sensitive people                 | 🟡 Yellow |
+| Moderate      | 101-200   | Discomfort to people with lung disease               | 🟠 Orange |
+| Poor          | 201-300   | Discomfort to most people                            | 🔴 Red    |
+| Very Poor     | 301-400   | May cause respiratory issues                         | 🟣 Purple |
+| Severe        | 401+      | Serious impact on health, affects even healthy people| ⚫ Maroon |
+
+---
+
+## 🛠️ Customization & Advanced Usage
+
+- Add more cities or customize heatmaps by editing `app/plot_heatmap.py`.
+- Schedule retraining at custom intervals via `app/scheduled_training.py`.
+- Integrate additional data sources by extending `app/data_manager.py` and `app/fetch_and_train.py`.
+
+---
+
+## 🤝 API Credits
 
 - [World Air Quality Index (WAQI) API](https://aqicn.org/api/)
 - [NASA POWER API](https://power.larc.nasa.gov/docs/services/api/)
 
-## License
+---
 
-MIT
+## 📄 License
+
+MIT License.  
+Feel free to use, modify, and contribute!
+
+---
