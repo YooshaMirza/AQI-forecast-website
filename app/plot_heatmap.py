@@ -23,25 +23,15 @@ def plot_heatmap(city_coords_aqi, center_city=None):
     center_lat, center_lon = 23.5937, 80.9629  # Default center (India)
     zoom_level = 5
     
-    # If we have the center city in our data, center the map on it
     if center_city and center_city in city_coords_aqi:
         center_lat, center_lon, _ = city_coords_aqi[center_city]
-        zoom_level = 10  # Zoom in more when focused on a specific city
+        zoom_level = 10
     
-    # Create the map with a more attractive tile
-    tiles_options = [
-        "CartoDB positron", 
-        "CartoDB dark_matter", 
-        "OpenStreetMap", 
-        "Stamen Terrain"
-    ]
-    
-    # Create the map with a more stylish background
     m = folium.Map(location=[center_lat, center_lon], 
-                  zoom_start=zoom_level,
-                  tiles="CartoDB positron")  # Cleaner map style
+                   zoom_start=zoom_level,
+                   tiles="CartoDB positron")
     
-    # Add custom CSS for font and styling including animation for markers
+    # Custom CSS for styling
     custom_css = """
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -73,15 +63,29 @@ def plot_heatmap(city_coords_aqi, center_city=None):
     """
     m.get_root().html.add_child(folium.Element(custom_css))
     
-    # Add multiple tile layers for user to choose from
-    folium.TileLayer('CartoDB positron', name='Light Theme').add_to(m)
-    folium.TileLayer('CartoDB dark_matter', name='Dark Theme').add_to(m)
-    folium.TileLayer('OpenStreetMap', name='Standard Map').add_to(m)
-    folium.TileLayer('Stamen Terrain', name='Terrain').add_to(m)
+    # Add tile layers with explicit attribution
+    folium.TileLayer(
+        'CartoDB positron',
+        name='Light Theme',
+        attr='© OpenStreetMap contributors, © CartoDB'
+    ).add_to(m)
+    folium.TileLayer(
+        'CartoDB dark_matter',
+        name='Dark Theme',
+        attr='© OpenStreetMap contributors, © CartoDB'
+    ).add_to(m)
+    folium.TileLayer(
+        'OpenStreetMap',
+        name='Standard Map',
+        attr='© OpenStreetMap contributors'
+    ).add_to(m)
+    folium.TileLayer(
+        'Stamen Terrain',
+        name='Terrain',
+        attr='Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap contributors'
+    ).add_to(m)
     
-    # Add default city if no data
     if not city_coords_aqi:
-        # Add Delhi as a default city with a moderate AQI
         delhi_lat, delhi_lon = 28.6139, 77.2090
         delhi_aqi = 150
         folium.CircleMarker(
@@ -97,13 +101,10 @@ def plot_heatmap(city_coords_aqi, center_city=None):
         cities.append("Delhi (Default)")
         aqis.append(delhi_aqi)
         
-    # Add user-provided cities
     for city, (lat, lon, aqi) in city_coords_aqi.items():
-        # Main marker with popup
         color = get_color_for_aqi(aqi)
-        radius = 20 if city == center_city else 10  # Make the searched city's marker bigger
+        radius = 20 if city == center_city else 10
         
-        # Even more enhanced popup with better styling and info
         popup_html = f"""
         <div style="font-family: 'Poppins', Arial, sans-serif; padding: 16px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
             <h3 style="margin-bottom: 12px; color: #333; font-weight: 600; border-bottom: 2px solid {color}; padding-bottom: 8px;">{city.title()}</h3>
@@ -118,7 +119,6 @@ def plot_heatmap(city_coords_aqi, center_city=None):
         </div>
         """
         
-        # Add the marker with enhanced styling
         folium.CircleMarker(
             location=[lat, lon],
             radius=radius,
@@ -131,34 +131,30 @@ def plot_heatmap(city_coords_aqi, center_city=None):
             fill_opacity=0.85
         ).add_to(m)
         
-        # For the searched city, add a more prominent marker with an outer circle
         if city == center_city:
-            # Add multiple circles with decreasing opacity for a halo effect
             for i in range(3, 0, -1):
                 folium.CircleMarker(
                     location=[lat, lon],
-                    radius=radius * (1 + i * 0.5),  # Progressively larger circles
+                    radius=radius * (1 + i * 0.5),
                     color=color,
                     weight=2,
                     fill=True,
                     fill_color=color,
-                    fill_opacity=0.1 / i,  # Decreasing opacity
+                    fill_opacity=0.1 / i,
                     opacity=0.3,
                     popup=None,
                     tooltip=None
                 ).add_to(m)
             
-            # Add a dashed circle for extra emphasis
             folium.CircleMarker(
                 location=[lat, lon],
-                radius=radius * 2,  # Larger than the main marker
+                radius=radius * 2,
                 color=color,
                 weight=2,
                 fill=False,
-                dash_array='5, 10'  # Creates a dashed circle
+                dash_array='5, 10'
             ).add_to(m)
             
-            # Add a custom icon marker on top of the circle marker
             folium.Marker(
                 location=[lat, lon],
                 icon=folium.DivIcon(
@@ -181,20 +177,14 @@ def plot_heatmap(city_coords_aqi, center_city=None):
         
         cities.append(city)
         aqis.append(aqi)
-    # Use absolute paths for saving files
     import os
     static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
-    
-    # Make sure the static directory exists
     if not os.path.exists(static_dir):
         os.makedirs(static_dir)
-        
     heatmap_path = os.path.join(static_dir, "regional_heatmap.html")
     
-    # Add more interactive features to the map
     folium.LayerControl().add_to(m)
     
-    # Add an even more attractive title to the map
     title_text = f"Air Quality Map for {center_city.title()}" if center_city else "Air Quality Index Map"
     
     title_html = f'''
@@ -218,7 +208,6 @@ def plot_heatmap(city_coords_aqi, center_city=None):
     '''
     m.get_root().html.add_child(folium.Element(title_html))
     
-    # Add a better styled legend
     legend_html = '''
         <div style="position: fixed; 
                     bottom: 30px; 
@@ -260,7 +249,5 @@ def plot_heatmap(city_coords_aqi, center_city=None):
         </div>
     '''
     m.get_root().html.add_child(folium.Element(legend_html))
-    
-    # Save the heatmap
     m.save(heatmap_path)
     print(f"Heatmap saved to {heatmap_path}")
